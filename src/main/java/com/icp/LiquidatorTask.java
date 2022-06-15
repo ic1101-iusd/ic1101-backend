@@ -3,6 +3,7 @@ package com.icp;
 import static java.lang.String.format;
 import static java.math.BigInteger.valueOf;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.TimerTask;
@@ -16,7 +17,7 @@ public class LiquidatorTask extends TimerTask {
     public void run() {
         System.out.println("Task Run");
 
-        final BigInteger price = liquidatorService.getPrice();
+        final BigDecimal price = liquidatorService.getPrice();
         final BigInteger lastPositionId = liquidatorService.getLastPositionId();
         final BigInteger limit = valueOf(100);
 

@@ -1,8 +1,12 @@
 package com.icp;
 
+import static com.icp.NumberUtils.natToBigDecimal;
+import static com.icp.NumberUtils.toNat;
 import static org.ic4j.types.Principal.fromString;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -14,8 +18,8 @@ public class LiquidatorService {
 
     private final ICPProtocolProxy icpProtocolProxy;
     private static final int HEALTH_RATIO = 1;
-    private static final double MIN_RISK = 1.5;
-    private static final BigInteger DIMENSION = BigInteger.valueOf(100000000);
+    private static final BigDecimal MIN_RISK = BigDecimal.valueOf(1.15);
+
 
     LiquidatorService() {
         icpProtocolProxy = ProxyBuilder.create(ICPContext.agent(),
@@ -31,8 +35,8 @@ public class LiquidatorService {
     }
 
     @SneakyThrows
-    BigInteger getPrice() {
-        return icpProtocolProxy.getCollateralPrice().divide(DIMENSION);
+    BigDecimal getPrice() {
+        return natToBigDecimal(icpProtocolProxy.getCollateralPrice());
     }
 
     void liquidate(BigInteger id) throws ExecutionException, InterruptedException {
@@ -43,12 +47,12 @@ public class LiquidatorService {
         return icpProtocolProxy.getLastPositionId();
     }
 
-    boolean isLiquidated(SharedPosition positionDTO, BigInteger price) {
+    boolean isLiquidated(SharedPosition positionDTO, BigDecimal price) {
         return liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue() < HEALTH_RATIO;
     }
 
-    private BigInteger liquidationRation(BigInteger colAmount, BigInteger colPrice, BigInteger debt) {
-        return (colAmount.multiply(colPrice)).divide(BigInteger.valueOf((long) (debt.intValue() * MIN_RISK)));
+    private BigDecimal liquidationRation(BigInteger colAmount, BigDecimal colPrice, BigInteger debt) {
+        return (NumberUtils.natToBigDecimal(colAmount).multiply(colPrice)).divide(natToBigDecimal(debt).multiply(MIN_RISK), 2, RoundingMode.HALF_UP);
     }
 
     //ICP_NETWORK=http://127.0.0.1:8001;
@@ -73,8 +77,8 @@ public class LiquidatorService {
                     fromString(btcTokenPrincipal))
                     .getProxy(ICPBtcTokenProxy.class);
 
-            BigInteger amountBTC = BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_BTC")));
-            BigInteger amountTokens = BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_TOKEN")));
+            BigInteger amountBTC = toNat(BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_BTC"))));
+            BigInteger amountTokens = toNat(BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_TOKEN"))));
 
             icpBtcTokenProxy.approve(ownerContractPrincipal, amountBTC);
             System.out.println("BTC Token approved");

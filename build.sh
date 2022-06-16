@@ -7,4 +7,8 @@ docker run -it  -e ICP_NETWORK='http://host.docker.internal:8001' \
 -e INIT_APPROVE='true' \
 -e AMOUNT_BTC='200' \
 -e AMOUNT_TOKEN='10000' \
+-e IDENTITY_KEY='-----BEGIN PRIVATE KEY-----
+MFMCAQEwBQYDK2VwBCIEIFJcLiYH5ym+iBhKnPH7SfsFcZ+TU2Td3dXAvWu5JOWV
+oSMDIQBOt7dEpggtoXAILmiyolxKlwLIX716miMTuQYyOYPEpA==
+-----END PRIVATE KEY-----'\
 -t icp-liquidator-g -p 8080:8080

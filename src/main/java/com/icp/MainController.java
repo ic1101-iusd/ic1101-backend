@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.ic4j.agent.ProxyBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,15 +26,17 @@ public class MainController {
                 .getProxy(ICPBtcTokenProxy.class);
     }
 
+    @CrossOrigin(origins="*")
     @GetMapping("/health")
-    public ResponseEntity health() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> health() {
+        return ResponseEntity.ok("The server is running");
     }
 
     @SneakyThrows
+    @CrossOrigin(origins="*")
     @PostMapping("/transfer/{principal}")
     public ResponseEntity<String> transfer(@PathVariable String principal) {
         icpBtcTokenProxy.transfer(fromString(principal), BigInteger.valueOf(100000000L)).get();
-        return ResponseEntity.ok("1 BTC to " + principal);
+        return ResponseEntity.ok("Sent 1 BTC to " + principal);
     }
 }

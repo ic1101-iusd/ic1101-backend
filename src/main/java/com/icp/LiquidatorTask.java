@@ -28,7 +28,6 @@ public class LiquidatorTask extends TimerTask {
                     .filter(sharedPosition -> !sharedPosition.getDeleted())
                     .filter(positionDTO -> liquidatorService.isLiquidated(positionDTO, price))
                     .collect(Collectors.toList());
-
             liquidatedPositions.forEach(liquidatedPosition -> {
                 System.out.println(format("Start to liquidate %s", liquidatedPosition));
                 try {

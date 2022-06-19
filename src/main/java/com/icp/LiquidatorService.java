@@ -77,8 +77,8 @@ public class LiquidatorService {
                     fromString(btcTokenPrincipal))
                     .getProxy(ICPBtcTokenProxy.class);
 
-            BigInteger amountBTC = toNat(BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_BTC"))));
-            BigInteger amountTokens = toNat(BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_TOKEN"))));
+            BigInteger amountBTC = BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_BTC")));
+            BigInteger amountTokens = BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_TOKEN")));
 
             icpBtcTokenProxy.approve(ownerContractPrincipal, amountBTC);
             System.out.println("BTC Token approved");

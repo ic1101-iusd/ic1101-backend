@@ -24,7 +24,7 @@ public class ICPContext {
             System.out.println("IDENTITY_KEY:" +  getenv("IDENTITY_KEY"));
             System.out.println("ICP_NETWORK:" +  getenv("ICP_NETWORK"));
             Security.addProvider(new BouncyCastleProvider());
-            Identity identity = BasicIdentity.fromPEMFile(new BufferedReader(new InputStreamReader(ICPContext.class.getResourceAsStream("/identity.pem"))));
+            Identity identity = BasicIdentity.fromPEMFile(new InputStreamReader(ICPContext.class.getResourceAsStream("/identity.pem")));
             System.out.println("Identity:"+identity.sender());
             ReplicaTransport transport = ReplicaApacheHttpTransport.create(getenv("ICP_NETWORK"));
             agent = new AgentBuilder().transport(transport).identity(identity).build();

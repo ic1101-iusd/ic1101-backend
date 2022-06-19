@@ -52,7 +52,7 @@ public class LiquidatorService {
     }
 
     BigDecimal liquidationRation(BigInteger colAmount, BigDecimal colPrice, BigInteger debt) {
-        return (NumberUtils.fromNat(colAmount).multiply(colPrice)).divide(NumberUtils.fromNat(debt).multiply(MIN_RISK), 2, RoundingMode.UNNECESSARY);
+        return (NumberUtils.fromNat(colAmount).multiply(colPrice)).divide(NumberUtils.fromNat(debt).multiply(MIN_RISK), 10, RoundingMode.HALF_DOWN);
     }
 
     @SneakyThrows

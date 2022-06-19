@@ -47,12 +47,12 @@ public class LiquidatorService {
     }
 
     boolean isLiquidated(SharedPosition positionDTO, BigDecimal price) {
-        System.out.println(positionDTO.getId() + ":" + liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue());
+        System.out.println (positionDTO.getId()+":"+liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue());
         return liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue() < HEALTH_RATIO;
     }
 
     BigDecimal liquidationRation(BigInteger colAmount, BigDecimal colPrice, BigInteger debt) {
-        return (NumberUtils.fromNat(colAmount).multiply(colPrice)).divide(NumberUtils.fromNat(debt).multiply(MIN_RISK), 2, RoundingMode.HALF_UP);
+        return (NumberUtils.fromNat(colAmount).multiply(colPrice)).divide(NumberUtils.fromNat(debt).multiply(MIN_RISK), 2, RoundingMode.UNNECESSARY);
     }
 
     @SneakyThrows

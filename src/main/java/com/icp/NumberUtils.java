@@ -14,4 +14,5 @@ public class NumberUtils {
     public static BigInteger toNat(BigInteger value) {
         return value.multiply(DIMENSION);
     }
+
 }

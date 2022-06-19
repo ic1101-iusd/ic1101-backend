@@ -20,6 +20,8 @@ public class ICPContext {
     @SneakyThrows
     static synchronized Agent agent() {
         if (agent == null) {
+            System.out.println("IDENTITY_KEY:" +  System.getenv("IDENTITY_KEY"));
+            System.out.println("ICP_NETWORK:" +  System.getenv("ICP_NETWORK"));
             Security.addProvider(new BouncyCastleProvider());
             Identity identity = BasicIdentity.fromPEMFile(new StringReader(System.getenv("IDENTITY_KEY")));
             ReplicaTransport transport = ReplicaApacheHttpTransport.create(getenv("ICP_NETWORK"));

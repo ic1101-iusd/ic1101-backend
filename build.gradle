@@ -25,6 +25,16 @@ jar {
     exclude 'META-INF/*.RSA', 'META-INF/*.SF', 'META-INF/*.DSA'
 }
 
+
+
+configurations {
+    all {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        exclude group: 'ch.qos.logback', module: 'logback-classic'
+        exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+    }
+}
+
 dependencies {
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.4'
@@ -33,6 +43,9 @@ dependencies {
     implementation group: 'org.ic4j', name: 'ic4j-candid', version: '0.6.13'
     implementation group: 'org.ic4j', name: 'ic4j-agent', version: '0.6.13'
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.36'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation platform('org.springframework.boot:spring-boot-dependencies:2.4.5')
+    implementation 'org.springframework.boot:spring-boot-starter'
 
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'

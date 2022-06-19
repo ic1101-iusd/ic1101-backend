@@ -3,9 +3,8 @@ package com.icp;
 import static org.ic4j.types.Principal.fromString;
 
 import java.math.BigInteger;
-import java.util.TreeMap;
-import java.util.concurrent.CompletableFuture;
 import javax.annotation.PostConstruct;
+import lombok.SneakyThrows;
 import org.ic4j.agent.ProxyBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("main/")
+@RestController
 public class MainController {
 
     private ICPBtcTokenProxy icpBtcTokenProxy;
@@ -26,14 +25,15 @@ public class MainController {
                 .getProxy(ICPBtcTokenProxy.class);
     }
 
-    @GetMapping("/ok")
-    public ResponseEntity ok() {
+    @GetMapping("/health")
+    public ResponseEntity health() {
         return ResponseEntity.ok().build();
     }
 
+    @SneakyThrows
     @PostMapping("/transfer/{principal}")
     public ResponseEntity<String> transfer(@PathVariable String principal) {
-        CompletableFuture<TreeMap> transfer = icpBtcTokenProxy.transfer(fromString(principal), BigInteger.valueOf(100000000L));
+        icpBtcTokenProxy.transfer(fromString(principal), BigInteger.valueOf(100000000L)).get();
         return ResponseEntity.ok("1 BTC to " + principal);
     }
 }

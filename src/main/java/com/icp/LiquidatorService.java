@@ -47,6 +47,7 @@ public class LiquidatorService {
     }
 
     boolean isLiquidated(SharedPosition positionDTO, BigDecimal price) {
+        System.out.println(positionDTO.getId() + ":" + liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue());
         return liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue() < HEALTH_RATIO;
     }
 

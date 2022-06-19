@@ -28,7 +28,6 @@ public class ICPContext {
             System.out.println("Identity:"+identity.sender());
             ReplicaTransport transport = ReplicaApacheHttpTransport.create(getenv("ICP_NETWORK"));
             agent = new AgentBuilder().transport(transport).identity(identity).build();
-            System.out.println("Status : "+ agent.status().get());
             System.out.println("Init Agent");
         }
         return agent;

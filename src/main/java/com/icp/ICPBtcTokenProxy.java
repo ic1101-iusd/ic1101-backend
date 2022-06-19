@@ -15,4 +15,10 @@ public interface ICPBtcTokenProxy {
     @Name("approve")
     @Waiter(timeout = 30)
     CompletableFuture<TreeMap> approve(@Argument(Type.PRINCIPAL) Principal spender, @Argument(Type.NAT) BigInteger value);
+
+    @UPDATE
+    @Name("transfer")
+    @Waiter(timeout = 30)
+    CompletableFuture<TreeMap> transfer(@Argument(Type.PRINCIPAL) Principal spender, @Argument(Type.NAT) BigInteger value);
+
 }

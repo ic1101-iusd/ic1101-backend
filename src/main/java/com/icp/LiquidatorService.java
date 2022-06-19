@@ -1,7 +1,6 @@
 package com.icp;
 
-import static com.icp.NumberUtils.natToBigDecimal;
-import static com.icp.NumberUtils.toNat;
+import static com.icp.NumberUtils.fromNat;
 import static org.ic4j.types.Principal.fromString;
 
 import java.math.BigDecimal;
@@ -36,7 +35,7 @@ public class LiquidatorService {
 
     @SneakyThrows
     BigDecimal getPrice() {
-        return natToBigDecimal(icpProtocolProxy.getCollateralPrice());
+        return NumberUtils.fromNat(icpProtocolProxy.getCollateralPrice());
     }
 
     void liquidate(BigInteger id) throws ExecutionException, InterruptedException {
@@ -51,13 +50,10 @@ public class LiquidatorService {
         return liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue() < HEALTH_RATIO;
     }
 
-    private BigDecimal liquidationRation(BigInteger colAmount, BigDecimal colPrice, BigInteger debt) {
-        return (NumberUtils.natToBigDecimal(colAmount).multiply(colPrice)).divide(natToBigDecimal(debt).multiply(MIN_RISK), 2, RoundingMode.HALF_UP);
+    BigDecimal liquidationRation(BigInteger colAmount, BigDecimal colPrice, BigInteger debt) {
+        return (NumberUtils.fromNat(colAmount).multiply(fromNat(colPrice))).divide(NumberUtils.fromNat(debt).multiply(MIN_RISK), 2, RoundingMode.HALF_UP);
     }
 
-    //ICP_NETWORK=http://127.0.0.1:8001;
-    // PROTOCOL_PRINCIPAL=ryjl3-tyaaa-aaaaa-aaaba-cai;BTC_TOKEN_PRINCIPAL=r7inp-6aaaa-aaaaa-aaabq-cai;
-    // PROTOCOL_OWNER_PRINCIPAL=o3m4k-ph6rg-ilvir-3tas4-zz5qs-i75vs-cw6ab-ghzr4-5sxz7-wc2d4-bae;BTC_AMOUNT_APPROVE=200;TOKEN_AMOUNT_POSITION=100000;INIT_APPROVE=false
     @SneakyThrows
     private void approveTokens() {
         boolean initApprove = Boolean.parseBoolean(System.getenv("INIT_APPROVE"));

@@ -7,7 +7,11 @@ public class NumberUtils {
 
     private static final BigInteger DIMENSION = BigInteger.valueOf(100000000);
 
-    public static BigDecimal natToBigDecimal(BigInteger value) {
+    public static BigDecimal fromNat(BigInteger value) {
+        return BigDecimal.valueOf(value.doubleValue() / DIMENSION.intValue());
+    }
+
+    public static BigDecimal fromNat(BigDecimal value) {
         return BigDecimal.valueOf(value.doubleValue() / DIMENSION.intValue());
     }
 

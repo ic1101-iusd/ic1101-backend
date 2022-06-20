@@ -20,9 +20,7 @@ public class LiquidatorTask extends TimerTask {
             final BigDecimal price = liquidatorService.getPrice();
             final BigInteger lastPositionId = liquidatorService.getLastPositionId();
             final BigInteger limit = valueOf(100);
-
             for (int offset = 0; offset < lastPositionId.intValue(); offset += 100) {
-
                 List<SharedPosition> liquidatedPositions = liquidatorService.getPositions(limit, valueOf(offset))
                         .stream()
                         .filter(sharedPosition -> !sharedPosition.getDeleted())
@@ -40,7 +38,7 @@ public class LiquidatorTask extends TimerTask {
                 System.out.println(format("Task Finish, liquidatedPositions count %s", liquidatedPositions.size()));
             }
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
     }
 }

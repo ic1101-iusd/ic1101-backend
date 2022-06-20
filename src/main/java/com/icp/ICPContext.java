@@ -4,6 +4,7 @@ import static java.lang.System.getenv;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.security.Security;
 import lombok.SneakyThrows;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -24,8 +25,7 @@ public class ICPContext {
             System.out.println("IDENTITY_KEY:" +  getenv("IDENTITY_KEY"));
             System.out.println("ICP_NETWORK:" +  getenv("ICP_NETWORK"));
             Security.addProvider(new BouncyCastleProvider());
-            Identity identity = BasicIdentity.fromPEMFile(new InputStreamReader(ICPContext.class.getResourceAsStream("/identity.pem")));
-            System.out.println("Identity:"+identity.sender());
+            Identity identity = BasicIdentity.fromPEMFile(new StringReader(System.getenv("IDENTITY_KEY")));
             ReplicaTransport transport = ReplicaApacheHttpTransport.create(getenv("ICP_NETWORK"));
             agent = new AgentBuilder().transport(transport).identity(identity).build();
             System.out.println("Init Agent");

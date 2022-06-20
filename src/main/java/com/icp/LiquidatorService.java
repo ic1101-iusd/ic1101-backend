@@ -1,5 +1,6 @@
 package com.icp;
 
+import static com.icp.NumberUtils.*;
 import static com.icp.NumberUtils.fromNat;
 import static org.ic4j.types.Principal.fromString;
 
@@ -35,7 +36,7 @@ public class LiquidatorService {
 
     @SneakyThrows
     BigDecimal getPrice() {
-        return NumberUtils.fromNat(icpProtocolProxy.getCollateralPrice());
+        return fromNat(icpProtocolProxy.getCollateralPrice());
     }
 
     void liquidate(BigInteger id) throws ExecutionException, InterruptedException {
@@ -52,7 +53,7 @@ public class LiquidatorService {
     }
 
     BigDecimal liquidationRation(BigInteger colAmount, BigDecimal colPrice, BigInteger debt) {
-        return (NumberUtils.fromNat(colAmount).multiply(colPrice)).divide(NumberUtils.fromNat(debt).multiply(MIN_RISK), 10, RoundingMode.HALF_DOWN);
+        return (fromNat(colAmount).multiply(colPrice)).divide(fromNat(debt).multiply(MIN_RISK), 10, RoundingMode.HALF_DOWN);
     }
 
     @SneakyThrows

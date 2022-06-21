@@ -1,4 +1,4 @@
-package com.icp;
+package com.icp.core;
 
 import static org.ic4j.candid.types.Type.*;
 import static org.ic4j.candid.types.Type.BOOL;

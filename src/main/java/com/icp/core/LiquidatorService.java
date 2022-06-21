@@ -1,33 +1,39 @@
-package com.icp;
+package com.icp.core;
 
-import static com.icp.NumberUtils.*;
-import static com.icp.NumberUtils.fromNat;
+import static com.icp.util.NumberUtils.fromNat;
 import static org.ic4j.types.Principal.fromString;
 
+import com.icp.contract.ICPBtcTokenProxy;
+import com.icp.contract.ICPProtocolProxy;
+import com.icp.contract.ICPTokenProxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import javax.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import org.ic4j.agent.ProxyBuilder;
 import org.ic4j.types.Principal;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LiquidatorService {
 
-    private final ICPProtocolProxy icpProtocolProxy;
+    private ICPProtocolProxy icpProtocolProxy;
+
     private static final int HEALTH_RATIO = 1;
     private static final BigDecimal MIN_RISK = BigDecimal.valueOf(1.15);
 
-
-    LiquidatorService() {
+    @PostConstruct
+    public void init() {
         icpProtocolProxy = ProxyBuilder.create(ICPContext.agent(),
                 fromString(System.getenv("PROTOCOL_PRINCIPAL")))
                 .getProxy(ICPProtocolProxy.class);
-
         approveTokens();
     }
+
 
     @SneakyThrows
     List<SharedPosition> getPositions(BigInteger limit, BigInteger offset) {
@@ -48,7 +54,7 @@ public class LiquidatorService {
     }
 
     boolean isLiquidated(SharedPosition positionDTO, BigDecimal price) {
-        System.out.println (positionDTO.getId()+":"+liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue());
+        System.out.println(positionDTO.getId() + ":" + liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue());
         return liquidationRation(positionDTO.getCollateralAmount(), price, positionDTO.getStableAmount()).doubleValue() < HEALTH_RATIO;
     }
 

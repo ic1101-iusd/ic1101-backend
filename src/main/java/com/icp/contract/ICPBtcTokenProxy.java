@@ -1,4 +1,4 @@
-package com.icp;
+package com.icp.contract;
 
 import java.math.BigInteger;
 import java.util.TreeMap;

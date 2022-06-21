@@ -1,4 +1,4 @@
-package com.icp;
+package com.icp.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

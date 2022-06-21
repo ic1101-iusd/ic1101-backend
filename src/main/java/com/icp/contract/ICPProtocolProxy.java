@@ -1,6 +1,7 @@
-package com.icp;
+package com.icp.contract;
 
 
+import com.icp.core.SharedPosition;
 import java.math.BigInteger;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;

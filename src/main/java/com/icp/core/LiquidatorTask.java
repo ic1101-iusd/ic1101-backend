@@ -1,4 +1,4 @@
-package com.icp;
+package com.icp.core;
 
 import static java.lang.String.format;
 import static java.math.BigInteger.valueOf;
@@ -8,15 +8,20 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 
-public class LiquidatorTask extends TimerTask {
+@RequiredArgsConstructor
+@Component
+public class LiquidatorTask{
 
-    private final LiquidatorService liquidatorService = new LiquidatorService();
+    private final LiquidatorService liquidatorService;
 
-    @Override
+    @Scheduled(cron = "*/10 * * * * *")
     public void run() {
         System.out.println("Task Run");
-        try {
             final BigDecimal price = liquidatorService.getPrice();
             final BigInteger lastPositionId = liquidatorService.getLastPositionId();
             final BigInteger limit = valueOf(100);
@@ -37,8 +42,6 @@ public class LiquidatorTask extends TimerTask {
                 });
                 System.out.println(format("Task Finish, liquidatedPositions count %s", liquidatedPositions.size()));
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
+
     }
 }

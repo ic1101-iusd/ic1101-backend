@@ -43,11 +43,20 @@ public class CollateralPriceTask {
                 .add(7, valueOf(13000))
                 .add(6, valueOf(12000))
                 .add(5, valueOf(11000))
-                 .add(4, valueOf(10000));
+                .add(4, valueOf(10000));
+    }
+
+    @Scheduled(initialDelay = 1000 * 10, fixedDelay = Long.MAX_VALUE)
+    public void runAtStartup() {
+        updatePrice();
     }
 
     @Scheduled(cron = "0 0/30 * * * ?")
     void updateCollateralPrice() {
+        updatePrice();
+    }
+
+    private void updatePrice() {
 
         if (COLLATERAL_PRICE_HISTORIES.size() > MAX_SIZE) {
             COLLATERAL_PRICE_HISTORIES.removeFirst();

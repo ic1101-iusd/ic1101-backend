@@ -39,5 +39,11 @@ public interface ICPProtocolProxy {
     @Waiter(timeout = 30)
     CompletableFuture<TreeMap> createPosition(@Argument(Type.NAT) BigInteger collateralAmount, @Argument(Type.NAT) BigInteger stableAmount);
 
+
+    @UPDATE
+    @Name("setCollateralPrice")
+    @Waiter(timeout = 30)
+    CompletableFuture<TreeMap> setCollateralPrice(@Argument(Type.NAT) BigInteger newPrice);
+
 }
 

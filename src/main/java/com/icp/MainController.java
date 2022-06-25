@@ -16,18 +16,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@CrossOrigin("*")
 public class MainController {
 
     private ICPBtcTokenProxy icpBtcTokenProxy;
 
-    @CrossOrigin(origins = "*")
     @GetMapping("/health")
     public ResponseEntity<String> health() {
         return ResponseEntity.ok("The server is running");
     }
 
     @SneakyThrows
-    @CrossOrigin(origins = "*")
     @PostMapping("/transfer/{principal}")
     public ResponseEntity<String> transfer(@PathVariable String principal) {
         transferWithFallback(principal);

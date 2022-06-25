@@ -46,7 +46,7 @@ public class CollateralPriceTask {
                  .add(4, valueOf(10000));
     }
 
-    @Scheduled(cron = "*/50 * * * *")
+    @Scheduled(cron = "0 0/30 * * * ?")
     void updateCollateralPrice() {
 
         if (COLLATERAL_PRICE_HISTORIES.size() > MAX_SIZE) {

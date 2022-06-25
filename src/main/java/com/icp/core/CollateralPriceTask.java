@@ -7,6 +7,10 @@ import static org.ic4j.types.Principal.fromString;
 
 import com.icp.contract.ICPProtocolProxy;
 import java.math.BigDecimal;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,7 +51,7 @@ public class CollateralPriceTask {
         updateCollateralPrice();
     }
 
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 0/20 * * * *")
     void updateCollateralPriceJob() {
         updateCollateralPrice();
     }
@@ -72,7 +76,9 @@ public class CollateralPriceTask {
         CURRENT_PRICE.set(current);
         System.out.println("Price changed to " + current.getPrice());
         CollateralPriceHistory next = new CollateralPriceHistory();
-        next.setCreatedDate(new Date());
+
+        LocalDateTime nextDateTime = LocalDateTime.now().plus(Duration.of(20, ChronoUnit.MINUTES));
+        next.setCreatedDate(Date.from(nextDateTime.atZone(ZoneId.systemDefault()).toInstant()));
         next.setPrice(randomCollection.next());
         COLLATERAL_PRICE_HISTORIES.add(next);
         System.out.println("Next price will be " + next.getPrice());

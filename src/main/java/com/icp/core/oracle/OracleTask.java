@@ -1,11 +1,13 @@
-package com.icp.core;
+package com.icp.core.oracle;
 
 
 import static com.icp.util.NumberUtils.toNat;
 import static java.math.BigDecimal.valueOf;
-import static org.ic4j.types.Principal.fromString;
 
 import com.icp.contract.ICPProtocolProxy;
+import com.icp.contract.ICPProxyFactory;
+import com.icp.core.CollateralPriceHistory;
+import com.icp.core.RandomCollection;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -15,47 +17,40 @@ import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.annotation.PostConstruct;
-import org.ic4j.agent.ProxyBuilder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+
+@RequiredArgsConstructor
 @Component
-public class CollateralPriceTask {
+public class OracleTask {
 
     private final RandomCollection<BigDecimal> randomCollection = new RandomCollection<>();
-
 
     public static final ConcurrentLinkedDeque<CollateralPriceHistory> COLLATERAL_PRICE_HISTORIES = new ConcurrentLinkedDeque<>();
     public static AtomicReference<CollateralPriceHistory> CURRENT_PRICE = new AtomicReference<>();
     private static final Long MAX_SIZE = 200L;
     private ICPProtocolProxy icpProtocolProxy;
+    private final OracleService oracleService;
 
     @PostConstruct
-    void init() {
-        icpProtocolProxy = ProxyBuilder.create(ICPContext.agent(),
-                fromString(System.getenv("PROTOCOL_PRINCIPAL")))
-                .getProxy(ICPProtocolProxy.class);
-
-        randomCollection
-                .add(15, valueOf(20000))
-                .add(13, valueOf(19000))
-                .add(12, valueOf(18000))
-                .add(11, valueOf(17000))
-                .add(10, valueOf(16000))
-                .add(9, valueOf(15000))
-                .add(8, valueOf(14000))
-                .add(7, valueOf(13000))
-                .add(6, valueOf(12000))
-                .add(5, valueOf(11000))
-                .add(4, valueOf(10000));
+    public void init() {
+        icpProtocolProxy = ICPProxyFactory.buildICPProtocolProxy();
         updateCollateralPrice();
     }
 
-    @Scheduled(cron = "0 0/20 * * * *")
+    @Scheduled(cron = "0 0/30 * * * *")
     void updateCollateralPriceJob() {
-        updateCollateralPrice();
+        oracleService.aggregatePrices().forEach((crypto, price) -> {
+            if (crypto == Crypto.BTC) {
+                icpProtocolProxy.setCollateralPrice(toNat(price));
+            }
+        });
     }
 
+    //Used only for demo demonstration
+    @Deprecated
     private void updateCollateralPrice() {
 
         if (COLLATERAL_PRICE_HISTORIES.size() > MAX_SIZE) {
@@ -68,12 +63,14 @@ public class CollateralPriceTask {
             current = new CollateralPriceHistory();
             current.setCreatedDate(new Date());
             current.setPrice(randomCollection.next());
+            COLLATERAL_PRICE_HISTORIES.add(current);
+            CURRENT_PRICE.set(current);
         } else {
             current = COLLATERAL_PRICE_HISTORIES.getLast();
         }
+
         icpProtocolProxy.setCollateralPrice(toNat(current.getPrice()));
-        COLLATERAL_PRICE_HISTORIES.add(current);
-        CURRENT_PRICE.set(current);
+
         System.out.println("Price changed to " + current.getPrice());
         CollateralPriceHistory next = new CollateralPriceHistory();
 

@@ -13,9 +13,4 @@ public class Main {
         System.out.println("Start icp-liquidator");
         SpringApplication.run(Main.class);
     }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }

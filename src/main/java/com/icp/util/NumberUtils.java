@@ -18,6 +18,10 @@ public class NumberUtils {
         return value.multiply(DIMENSION);
     }
 
+    public static BigInteger toNat(Double value) {
+        return toNat(BigDecimal.valueOf(value));
+    }
+
     public static BigInteger toNat(BigDecimal value) {
         return value.multiply(BigDecimal.valueOf(DIMENSION.intValue())).toBigIntegerExact();
     }

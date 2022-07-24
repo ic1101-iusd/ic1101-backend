@@ -1,7 +1,7 @@
 package com.icp;
 
 import com.icp.core.CollateralPriceHistory;
-import com.icp.core.CollateralPriceTask;
+import com.icp.core.oracle.OracleTask;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,16 +16,16 @@ public class CollateralPriceController {
 
     @GetMapping("/next")
     public CollateralPriceHistory nextPrice() {
-        return CollateralPriceTask.COLLATERAL_PRICE_HISTORIES.getLast();
+        return OracleTask.COLLATERAL_PRICE_HISTORIES.getLast();
     }
 
     @GetMapping("/current")
     public CollateralPriceHistory current() {
-        return CollateralPriceTask.CURRENT_PRICE.get();
+        return OracleTask.CURRENT_PRICE.get();
     }
 
     @GetMapping("/history")
     public List<CollateralPriceHistory> history() {
-        return new ArrayList<>(CollateralPriceTask.COLLATERAL_PRICE_HISTORIES);
+        return new ArrayList<>(OracleTask.COLLATERAL_PRICE_HISTORIES);
     }
 }

@@ -31,14 +31,6 @@ public class ICPContext {
         return agent;
     }
 
-
-    public static void init() {
-        lock.lock();
-        System.out.println("Init Agent");
-        agent = buildAgent();
-        lock.unlock();
-    }
-
     @SneakyThrows
     private static Agent buildAgent() {
         System.out.println("ICP_NETWORK:" + getenv("ICP_NETWORK"));

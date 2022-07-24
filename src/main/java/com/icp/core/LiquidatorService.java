@@ -5,6 +5,7 @@ import static org.ic4j.types.Principal.fromString;
 
 import com.icp.contract.ICPBtcTokenProxy;
 import com.icp.contract.ICPProtocolProxy;
+import com.icp.contract.ICPProxyFactory;
 import com.icp.contract.ICPTokenProxy;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -28,9 +29,7 @@ public class LiquidatorService {
 
     @PostConstruct
     public void init() {
-        icpProtocolProxy = ProxyBuilder.create(ICPContext.agent(),
-                fromString(System.getenv("PROTOCOL_PRINCIPAL")))
-                .getProxy(ICPProtocolProxy.class);
+        icpProtocolProxy = ICPProxyFactory.buildICPProtocolProxy();
         approveTokens();
     }
 
@@ -74,12 +73,8 @@ public class LiquidatorService {
 
             System.out.println(String.format("MINT_TOKEN_PRINCIPAL %s MINT_TOKEN_PRINCIPAL %s PROTOCOL_PRINCIPAL %s", mintTokenPrincipal, btcTokenPrincipal, ownerContractPrincipal.toString()));
 
-            ICPTokenProxy icpTokenProxy = ProxyBuilder.create(ICPContext.agent(),
-                    fromString(mintTokenPrincipal))
-                    .getProxy(ICPTokenProxy.class);
-            ICPBtcTokenProxy icpBtcTokenProxy = ProxyBuilder.create(ICPContext.agent(),
-                    fromString(btcTokenPrincipal))
-                    .getProxy(ICPBtcTokenProxy.class);
+            ICPTokenProxy icpTokenProxy = ICPProxyFactory.buildICPTokenProxy();
+            ICPBtcTokenProxy icpBtcTokenProxy = ICPProxyFactory.buildICPBtcTokenProxy();
 
             BigInteger amountBTC = BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_BTC")));
             BigInteger amountTokens = BigInteger.valueOf(Long.parseLong(System.getenv("AMOUNT_TOKEN")));

@@ -24,5 +24,4 @@ public class OracleService {
                 .collect(Collectors.groupingBy(Map.Entry::getKey, Collectors.averagingDouble(e -> e.getValue().doubleValue())));
     }
 
-
 }

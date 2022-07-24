@@ -10,7 +10,6 @@ public enum Crypto {
     ICP("internet-computer"),
     BTC("bitcoin");
     String alias;
-
     public static Crypto from(String name) {
         return Arrays.stream(values())
                 .filter(c -> c.alias.equals(name))
